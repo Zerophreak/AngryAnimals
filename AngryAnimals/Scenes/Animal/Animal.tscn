@@ -30,10 +30,11 @@ scale = Vector2(0.15, 0.15)
 shape = SubResource("CircleShape2D_vqphk")
 
 [node name="DebugLabel" type="Label" parent="."]
-offset_left = -40.0
-offset_top = -49.0
-offset_right = 43.0
-offset_bottom = -22.0
+offset_left = -39.0
+offset_top = -83.0
+offset_right = 44.0
+offset_bottom = -56.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "asdsadada"
 
 [node name="Arrow" type="Sprite2D" parent="."]
