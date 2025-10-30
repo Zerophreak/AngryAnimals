@@ -8,6 +8,10 @@ public partial class Animal : RigidBody2D
 
 	private static readonly Vector2 DRAG_LIM_MAX = new Vector2(0, 60);
 	private static readonly Vector2 DRAG_LIM_MIN = new Vector2(-60, 0);
+
+	private const float IMPULSE_MULT = 20.0f;
+	private const float IMPULSE_MAX = 1200.0f;
+
 	[Export] private Sprite2D _arrow;
 	[Export] private Label _debugLabel;
 	[Export] private AudioStreamPlayer2D _stretchSound;
@@ -21,6 +25,7 @@ public partial class Animal : RigidBody2D
 	private Vector2 _dragStart = Vector2.Zero;
 	private Vector2 _draggedVector = Vector2.Zero;
 	private Vector2 _lastDraggedVector = Vector2.Zero;
+	
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -28,6 +33,7 @@ public partial class Animal : RigidBody2D
 		ConnectSignals();
 		InitializeVariables();
 	}
+	
 	private void InitializeVariables()
 	{
 		_start = Position;
@@ -60,9 +66,27 @@ public partial class Animal : RigidBody2D
 		_arrow.Show();
 	}
 
+	private Vector2 CalculateImpulse()
+	{
+		return _draggedVector * -IMPULSE_MULT;
+	}
+
 	private void StartRelease()
 	{
+		_arrow.Hide();
+		_launchSound.Play();
+		Freeze = false;
+		ApplyCentralImpulse(CalculateImpulse());
+	}
 
+	private bool DetectRelease()
+	{
+		if (_state == AnimalState.DRAG && Input.IsActionJustReleased("drag"))
+		{
+			ChangeState(AnimalState.RELEASE);
+			return true;
+		}
+		return false;
 	}
 
 	private void ConstrainDragWithinLimits()
@@ -79,22 +103,32 @@ public partial class Animal : RigidBody2D
         {
 			_stretchSound.Play();
 		}
-		
 	}
 	private void UpdateDraggedVector()
 	{
 		_draggedVector = GetGlobalMousePosition() - _dragStart;
-	
+
 	}
-	
+
+	private void UpdateArrowScale()
+	{
+		float impulseLength = CalculateImpulse().Length();
+		float scalePercentage = impulseLength / IMPULSE_MAX;
+		_arrow.Scale = new Vector2((_arrowScaleX * scalePercentage) + _arrowScaleX, _arrow.Scale.Y);
+
+		_arrow.Rotation = (_start - Position).Angle();
+	}
+
 	private void HandleDragging()
-    {
+	{
+		if (DetectRelease())
+			return;
 		UpdateDraggedVector();
 		PlayStrechSound();
 		ConstrainDragWithinLimits();
-    }
+		UpdateArrowScale();
+	}
 
-	
 	private void UpdateState()
     {
 		switch (_state)
