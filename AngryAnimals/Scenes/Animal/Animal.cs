@@ -25,7 +25,7 @@ public partial class Animal : RigidBody2D
 	private Vector2 _dragStart = Vector2.Zero;
 	private Vector2 _draggedVector = Vector2.Zero;
 	private Vector2 _lastDraggedVector = Vector2.Zero;
-	
+	private int _lastCollisionCount = 0; 
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -40,7 +40,6 @@ public partial class Animal : RigidBody2D
 		_arrowScaleX = _arrow.Scale.X;
 		_arrow.Hide();
 	}
-
 	private void ConnectSignals()
 	{
 		_visibleOnScreenNotifier.ScreenExited += OnScreenExited;
@@ -107,7 +106,6 @@ public partial class Animal : RigidBody2D
 	private void UpdateDraggedVector()
 	{
 		_draggedVector = GetGlobalMousePosition() - _dragStart;
-
 	}
 
 	private void UpdateArrowScale()
@@ -129,6 +127,21 @@ public partial class Animal : RigidBody2D
 		UpdateArrowScale();
 	}
 
+	private void PlayKickSoundOnCollision()
+	{
+		if (_lastCollisionCount == 0 && GetContactCount() > 0 && !_kickSound.Playing)
+		{
+			_kickSound.Play();
+		}
+		
+		_lastCollisionCount = GetContactCount();
+    }
+
+	private void HandleFlight()
+    {
+		PlayKickSoundOnCollision();
+    }
+
 	private void UpdateState()
     {
 		switch (_state)
@@ -137,6 +150,7 @@ public partial class Animal : RigidBody2D
 				HandleDragging();
 				break;
 			case AnimalState.RELEASE:
+				HandleFlight();
 				break;
 		}
 	}
@@ -164,12 +178,30 @@ public partial class Animal : RigidBody2D
 		}
 		//GD.Print(@event);
 	}
-	
-    private void ONSleepingStateChanged()
-    {    
+	private void ONSleepingStateChanged()
+	{
+		if(Sleeping)
+        {
+			foreach (Node2D body in GetCollidingBodies())
+			{
+				if (body is Cup cup)
+				{
+					cup.DIe();
+				}
+			}
+			CallDeferred("Die");
+        }   
     }
+
+	private void Die()
+	{
+		SignalManager.EmitOnAnimalDied();
+		QueueFree();
+	}
+	
 	private void OnScreenExited()
 	{
 		GD.Print("Screen Exited");
+		Die();
 	}
 }
