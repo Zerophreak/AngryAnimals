@@ -58,7 +58,7 @@ _data = {
 &"Vanish": SubResource("Animation_nfkcc")
 }
 
-[node name="Cup" type="StaticBody2D" node_paths=PackedStringArray("_animationPlayer")]
+[node name="Cup" type="StaticBody2D" node_paths=PackedStringArray("_animationPlayer") groups=["Cup"]]
 script = ExtResource("1_nfkcc")
 _animationPlayer = NodePath("AnimationPlayer")
 

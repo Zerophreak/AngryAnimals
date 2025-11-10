@@ -3,6 +3,7 @@ using System;
 
 public partial class Cup : StaticBody2D
 {
+	public const string GROUP_NAME = "Cup";
 	[Export] private AnimationPlayer _animationPlayer;
 
 	// Called when the node enters the scene tree for the first time.
