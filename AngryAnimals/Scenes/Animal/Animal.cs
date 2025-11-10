@@ -76,6 +76,7 @@ public partial class Animal : RigidBody2D
 		_launchSound.Play();
 		Freeze = false;
 		ApplyCentralImpulse(CalculateImpulse());
+		SignalManager.EmitonAttemptMade();
 	}
 
 	private bool DetectRelease()
