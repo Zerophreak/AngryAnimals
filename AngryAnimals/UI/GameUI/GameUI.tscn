@@ -1,0 +1,66 @@
+[gd_scene load_steps=4 format=3 uid="uid://rm07tim0m22a"]
+
+[ext_resource type="LabelSettings" uid="uid://bobu368nyx77x" path="res://Resources/LG_Grey_48.tres" id="1_lisx7"]
+[ext_resource type="LabelSettings" uid="uid://b6w72e575wma0" path="res://Resources/LG_BLUE_96.tres" id="2_81duk"]
+[ext_resource type="LabelSettings" uid="uid://bf3qjxk5n7n1o" path="res://Resources/LG_WHITE_24.tres" id="3_mruwq"]
+
+[node name="GameUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="MC" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBScore" type="VBoxContainer" parent="MC"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+
+[node name="LevelLabel" type="Label" parent="MC/VBScore"]
+layout_mode = 2
+text = "Level 0"
+label_settings = ExtResource("1_lisx7")
+vertical_alignment = 1
+
+[node name="AttemptsLabel" type="Label" parent="MC/VBScore"]
+layout_mode = 2
+text = "Attempts: 1000"
+label_settings = ExtResource("1_lisx7")
+vertical_alignment = 1
+
+[node name="VBGameover" type="VBoxContainer" parent="MC"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+alignment = 1
+
+[node name="GameOverLabel" type="Label" parent="MC/VBGameover"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "LevelComplete"
+label_settings = ExtResource("2_81duk")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PressLabel" type="Label" parent="MC/VBGameover"]
+layout_mode = 2
+text = "Press Space "
+label_settings = ExtResource("3_mruwq")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="GameOverMusic" type="AudioStreamPlayer" parent="."]
