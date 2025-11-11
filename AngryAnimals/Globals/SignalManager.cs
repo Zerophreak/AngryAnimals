@@ -8,6 +8,7 @@ public partial class SignalManager : Node
 	[Signal] public delegate void OnpressedEventHandler();
 	[Signal] public delegate void OnLevelCompleteEventHandler();
 	[Signal] public delegate void OnAttemptMadeEventHandler();
+	[Signal] public delegate void OnAttemptUpdatedEventHandler(int num);
 
 	public static SignalManager Instance { get; private set; }
 
@@ -36,6 +37,11 @@ public partial class SignalManager : Node
 	public static void EmitonAttemptMade()
 	{
 		Instance.EmitSignal(SignalName.OnAttemptMade);
+	}
+
+	public static void EmitOnAttempteUpdated(int num)
+	{
+		Instance.EmitSignal(SignalName.OnAttemptUpdated, num);
 	}
 
 	
