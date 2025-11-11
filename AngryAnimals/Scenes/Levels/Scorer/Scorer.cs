@@ -15,19 +15,18 @@ public partial class Scorer : Node
 
 		_totalCups = GetTree().GetNodesInGroup(Cup.GROUP_NAME).Count;
 		GD.Print($"Scorer found {_totalCups} Cups");
-
-		
 	}
-
 	public override void _ExitTree()
 	{
 		SignalManager.Instance.OnCupDestroyed -= OnCupDestroyed;
-		SignalManager.Instance.OnAttemptMade -= OnAttemptMade; 
+		SignalManager.Instance.OnAttemptMade -= OnAttemptMade;
+		//SignalManager.Instance.OnScoreUpdated -= OnScoreUpdated;
 	}
 
 	private void OnAttemptMade()
 	{
 		_attempts++;
+		SignalManager.EmitOnAttempteUpdated(_attempts);
 		GD.Print("Attempts: ", _attempts);
 	}
 
@@ -38,6 +37,7 @@ public partial class Scorer : Node
 		{
 			SignalManager.EmitOnLevelComplete();
 			GD.Print("Level complete");
+			ScoreManager.SetScoreForLevel(ScoreManager.GetLevelSelected(), _attempts);
 		}
 	}
 	
