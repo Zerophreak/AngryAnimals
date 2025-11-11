@@ -1,10 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://rm07tim0m22a"]
+[gd_scene load_steps=5 format=3 uid="uid://rm07tim0m22a"]
 
 [ext_resource type="LabelSettings" uid="uid://bobu368nyx77x" path="res://Resources/LG_Grey_48.tres" id="1_lisx7"]
+[ext_resource type="Script" uid="uid://buu5u1tfdh58u" path="res://UI/GameUI/GameUi.cs" id="1_mruwq"]
 [ext_resource type="LabelSettings" uid="uid://b6w72e575wma0" path="res://Resources/LG_BLUE_96.tres" id="2_81duk"]
 [ext_resource type="LabelSettings" uid="uid://bf3qjxk5n7n1o" path="res://Resources/LG_WHITE_24.tres" id="3_mruwq"]
 
-[node name="GameUI" type="Control"]
+[node name="GameUI" type="Control" node_paths=PackedStringArray("_attemptsLabel", "_levelLabel", "_vb2", "_gameoverMusic")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -12,6 +13,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+script = ExtResource("1_mruwq")
+_attemptsLabel = NodePath("MC/VBScore/AttemptsLabel")
+_levelLabel = NodePath("MC/VBScore/LevelLabel")
+_vb2 = NodePath("MC/VBGameover")
+_gameoverMusic = NodePath("GameOverMusic")
 
 [node name="MC" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -38,11 +44,12 @@ vertical_alignment = 1
 
 [node name="AttemptsLabel" type="Label" parent="MC/VBScore"]
 layout_mode = 2
-text = "Attempts: 1000"
+text = "Attempts 0"
 label_settings = ExtResource("1_lisx7")
 vertical_alignment = 1
 
 [node name="VBGameover" type="VBoxContainer" parent="MC"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
