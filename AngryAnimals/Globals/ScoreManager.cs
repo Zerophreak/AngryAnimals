@@ -1,6 +1,8 @@
 using Godot;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public partial class ScoreManager : Node
 {
@@ -16,7 +18,13 @@ public partial class ScoreManager : Node
 	public override void _Ready()
 	{
 		Instance = this;
+		LoadScores();
 	}
+
+    public override void _ExitTree()
+    {
+		SaveScores();
+    }
 
 	public static int GetLevelSelected()
 	{
@@ -46,9 +54,9 @@ public partial class ScoreManager : Node
 	public static void SetScoreForLevel(int levelNumber, int score)
 	{
 		LevelScore LevelScore = GetLevelScore(levelNumber);
-		if(LevelScore != null)
+		if (LevelScore != null)
 		{
-			if(score < LevelScore.BestScore)
+			if (score < LevelScore.BestScore)
 			{
 				LevelScore.BestScore = score;
 				LevelScore.DateSet = DateTime.Now;
@@ -59,4 +67,28 @@ public partial class ScoreManager : Node
 			Instance._levelScores.Add(new LevelScore(levelNumber, score));
 		}
 	}
+
+	private void SaveScores()
+	{
+		using var file = FileAccess.Open(SCORE_FILE, FileAccess.ModeFlags.Write);
+		if (file != null)
+		{
+			string jsonStr = JsonConvert.SerializeObject(_levelScores);
+			file.StoreString(jsonStr);
+		}
+	}
+
+	private void LoadScores()
+	{
+		using var file = FileAccess.Open(SCORE_FILE, FileAccess.ModeFlags.Read);
+		if (file != null)
+		{
+			string jsonStr = file.GetAsText();
+			if (!string.IsNullOrEmpty(jsonStr))
+            {
+				_levelScores = JsonConvert.DeserializeObject<List<LevelScore>>(jsonStr);
+            }
+		}
+	}
+
 }

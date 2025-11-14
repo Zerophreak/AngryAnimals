@@ -13,6 +13,11 @@ public partial class Level : Node2D
 		OnAnimalDied();
     }
 
+	public override void _ExitTree()
+    {
+		SignalManager.Instance.OnAnimalDied -= OnAnimalDied;
+    }
+
     private void OnAnimalDied()
     {
 		Animal newAnimal = _animalScene.Instantiate<Animal>();
@@ -25,13 +30,7 @@ public partial class Level : Node2D
     {
 		if (Input.IsKeyPressed(Key.Q))
         {
-			GetTree().ChangeSceneToFile("res://UI/Main/Main.tscn");
+			GameManager.LoadMain();
         }
     }
-
-    public override void _ExitTree()
-    {
-		SignalManager.Instance.OnAnimalDied -= OnAnimalDied;
-    }
-
 }
